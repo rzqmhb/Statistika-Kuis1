@@ -72,11 +72,11 @@ class Nomor3() :
     barang = data.loc[data['StockCode'] == kode_barang]
 
     #mengelompokkan jumlah baris berdasarkan negara
-    groupedData = data.groupby(['Country']).size().reset_index(name='Jumlah_Penjualan')
+    groupedData = data.groupby('Country')['Quantity'].sum()
     print(groupedData, '\n')
 
     #merubah jumlah menjadi persentase
-    total = groupedData['Jumlah_Penjualan'].sum()
+    total = data['Quantity'].sum()
 
     # print(total)
     # if total != 0 :
@@ -84,10 +84,9 @@ class Nomor3() :
     # else :
     #     print('kosong')
 
-    groupedData['Persentase'] = groupedData['Jumlah_Penjualan'] / total * 100
-    print(groupedData, '\n')
+    groupedData['Persentase'] = data.groupby('Country')['Quantity'].sum() / total * 100
+    print(groupedData['Persentase'], '\n')
 
     #list data 5 barang teratas berdasarkan jumlah penjualan
-    groupedByBarang = data.groupby(['StockCode']).size().reset_index(name='Jumlah_Penjualan').sort_values('Jumlah_Penjualan', ascending=False)
-    groupedByBarang['Nama_Barang'] = data['Description']
-    print(groupedByBarang.head(), '\n')
+    groupedByBarang = data.groupby(['StockCode','Description'])['Quantity'].sum()
+    print (groupedByBarang.sort_values (ascending=False)[:5])
